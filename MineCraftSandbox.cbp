@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="MineCraftSandbox" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/MineCraftSandbox" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/MineCraftSandbox" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-std=c++14" />
+			<Add option="-fexceptions" />
+			<Add directory="/home/divitoa/Program/c++/libs/glfw-3.2.1/include" />
+			<Add directory="/home/divitoa/Program/c++/libs/glew-2.0.0/include" />
+			<Add directory="/home/divitoa/Program/c++/libs/assimp-master/include" />
+		</Compiler>
+		<Linker>
+			<Add library="glfw3" />
+			<Add library="GLEW" />
+			<Add library="SOIL" />
+			<Add library="assimp" />
+			<Add library="X11" />
+			<Add library="Xrandr" />
+			<Add library="Xinerama" />
+			<Add library="Xi" />
+			<Add library="Xxf86vm" />
+			<Add library="Xcursor" />
+			<Add library="dl" />
+			<Add library="GL" />
+			<Add library="m" />
+			<Add library="pthread" />
+			<Add directory="/home/divitoa/Program/c++/libs/glfw-build/src" />
+			<Add directory="/home/divitoa/Program/c++/libs/glew-2.0.0/build/lib" />
+			<Add directory="/home/divitoa/Program/c++/libs/assimp-master/lib" />
+		</Linker>
+		<Unit filename="main.cpp" />
+		<Extensions>
+			<envvars />
+			<code_completion />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
