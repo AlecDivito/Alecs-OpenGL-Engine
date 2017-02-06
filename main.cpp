@@ -113,14 +113,37 @@ int main()
 
     // Triangle vertices
     GLfloat vertices[] = {
-         0.5f,  0.5f, 0.0f,  // Top Right
-         0.5f, -0.5f, 0.0f,  // Bottom Right
-        -0.5f, -0.5f, 0.0f,  // Bottom Left
-        -0.5f,  0.5f, 0.0f   // Top Left
+        // front
+         0.5f,  0.5f, 1.0f,  // Top Right
+         0.5f, -0.5f, 1.0f,  // Bottom Right
+        -0.5f, -0.5f, 1.0f,  // Bottom Left
+        -0.5f,  0.5f, 1.0f,   // Top Left
+        // back
+         0.5f,  0.5f, -1.0f,  // Top Right
+         0.5f, -0.5f, -1.0f,  // Bottom Right
+        -0.5f, -0.5f, -1.0f,  // Bottom Left
+        -0.5f,  0.5f, -1.0f   // Top Left
     };
     GLuint indices[] = { // Note we start at 0
+        // Front
         0, 1, 3, // triangle 1
-        1, 2, 3  // triangle 2
+        1, 2, 3,  // triangle 2
+        // Side right
+        0, 1, 5,
+        0, 4, 5,
+        // Side left
+        2, 3, 6,
+        3, 6, 7,
+        // Side up
+        0, 3, 4,
+        3, 4, 7,
+        // Side down
+        1, 2, 5,
+        2, 5, 6,
+        // back
+        4, 5, 7, // triangle 1
+        5, 6, 7  // triangle 2
+
     };
     // we need to store vertices in a buffer so we can manage them on the graphics card
     GLuint VBO, VAO, EBO;
@@ -142,6 +165,10 @@ int main()
     glEnableVertexAttribArray(0);
     // 4. We unbind the vertex array object
     glBindVertexArray(0);
+
+    // How to draw the triangles
+//    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     while(!glfwWindowShouldClose(window)) // checks if window was instructed to close
     {
