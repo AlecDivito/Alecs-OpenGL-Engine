@@ -113,19 +113,28 @@ int main()
 
     // Triangle vertices
     GLfloat vertices[] = {
-        -0.5f,  -0.5f, 0.0f,
-         0.5f,  -0.5f, 0.0f,
-         0.0f,   0.5f, 0.0f,
+         0.5f,  0.5f, 0.0f,  // Top Right
+         0.5f, -0.5f, 0.0f,  // Bottom Right
+        -0.5f, -0.5f, 0.0f,  // Bottom Left
+        -0.5f,  0.5f, 0.0f   // Top Left
+    };
+    GLuint indices[] = { // Note we start at 0
+        0, 1, 3, // triangle 1
+        1, 2, 3  // triangle 2
     };
     // we need to store vertices in a buffer so we can manage them on the graphics card
-    GLuint VBO, VAO;
+    GLuint VBO, VAO, EBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);// (num of buffers, [] of buffers)
+    glGenBuffers(1, &EBO);
     // 1. Bind vertex Array Object
     glBindVertexArray(VAO);
     // 2. Copy our vertices array in a buffer for OpenGl to use
     glBindBuffer(GL_ARRAY_BUFFER, VBO); // (specifies the targen buffer object, the buffer  object's ID)
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    // Now do the same thing just with the element buffer object
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
     // We then tell how opengl should interprit the vertex data
     // (layout_Location, size of vertex attribute(vec3), dataType, GL_FALSE, length of stride, offset of where the position data begins in the buffer)
     // 3. Then we set our vertex attributes pointers
@@ -143,7 +152,8 @@ int main()
         // 5. Draw the object
         glUseProgram(shaderProgram); // Every shader and rendering call after glUseProgram will now use this program object
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+//glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0); // unbind object so we dont misconfigure them elsewhere
 
         glfwSwapBuffers(window); // swap the color buffer (a large buffer that contains color values for each pixel in GLFW's window)
