@@ -56,6 +56,8 @@
 			<Add directory="/home/divitoa/Program/c++/libs/assimp-master/lib" />
 		</Linker>
 		<Unit filename="main.cpp" />
+		<Unit filename="shaders/shader.frag" />
+		<Unit filename="shaders/shader.vs" />
 		<Extensions>
 			<envvars />
 			<code_completion />
