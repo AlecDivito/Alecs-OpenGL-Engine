@@ -7,10 +7,14 @@
 #include <GLFW/glfw3.h>
 
 // Window dimensions
-const Gluint WIDTH = 800, HEIGHT = 600;
+const GLuint WIDTH = 800, HEIGHT = 600;
+
+// functions
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
 int main()
 {
+    /**** Initilizing everything important ****/
     if (!glfwInit())
     {
         std::cout << "Failed to Initilize GLFW" << std::endl;
@@ -48,6 +52,9 @@ int main()
     glfwGetFramebufferSize(window, &width, &height);
     // left, bottom, right, top of the screen coordiantes (we map (-1, 1) to (0, 800) and (0, 600))
     glViewport(0, 0, width, height);
+    /**** Initilizing everything important ****/
+
+    glfwSetKeyCallback(window, key_callback);
 
     while(!glfwWindowShouldClose(window)) // checks if window was instructed to close
     {
@@ -57,4 +64,14 @@ int main()
 
     glfwTerminate(); // Terminate glfw
     return 0;
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
+{
+    // When a user presses the escape key, we set the window should close property to true,
+    // Closing the applicaiton
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    {
+        glfwSetWindowShouldClose(window, GL_TRUE);
+    }
 }
