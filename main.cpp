@@ -59,6 +59,10 @@ int main()
     while(!glfwWindowShouldClose(window)) // checks if window was instructed to close
     {
         glfwPollEvents(); // checks if any events are triggered (like keyboard input or mouse movement events) and calls the corresponding functions
+
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // Sets the background color
+        glClear(GL_COLOR_BUFFER_BIT); // buffer is cleared to the buffer specified above
+
         glfwSwapBuffers(window); // swap the color buffer (a large buffer that contains color values for each pixel in GLFW's window)
     }
 
