@@ -8,36 +8,39 @@ Shader::Shader(std::string vertexShaderPath, std::string fragmentShaderPath, std
     const GLchar* fragShaderSource    = fragShaderString.c_str();
 
     this->Program = glCreateProgram();
-    GLuint vertexShader, fragShader;
+    GLuint vertexShader, fragShader, geometryShader;
 
     vertexShader = glCreateShader(GL_VERTEX_SHADER); // we tell what shader we want
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL); // specify ID, # of strings were sending, reference to those strings
     glCompileShader(vertexShader); // compile the shader
     printCompileError(vertexShader, "VERTEX");
     glAttachShader(this->Program, vertexShader);
-    glDeleteShader(vertexShader);
 
     fragShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragShader, 1, &fragShaderSource, NULL);
     glCompileShader(fragShader);
     printCompileError(fragShader, "FRAGMENT");
     glAttachShader(this->Program, fragShader);
-    glDeleteShader(fragShader);
 
     if (geometryShaderPath != "")
     {
         std::string geometryShaderString = readShaderFile(geometryShaderPath);
         const GLchar* geometryShaderSource = geometryShaderString.c_str();
-        GLuint geometryShader;
         geometryShader = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(geometryShader, 1, &geometryShaderSource, NULL);
         glCompileShader(geometryShader);
         printCompileError(geometryShader, "GEOMETRY");
         glAttachShader(this->Program, geometryShader);
-        glDeleteShader(geometryShader);
     }
     glLinkProgram(this->Program);
     printCompileError(this->Program, "PROGRAM");
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragShader);
+    if (geometryShaderPath != "")
+    {
+        glDeleteShader(geometryShader);
+    }
+
 }
 
 void Shader::Use()
@@ -50,9 +53,9 @@ void Shader::printCompileError(GLuint shader, std::string type)
     GLint success;
     GLchar infoLog[512];
 
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
     if (type == "PROGRAM")
     {
+        glGetProgramiv(shader, GL_LINK_STATUS, &success);
         if (!success)
         {   // display errors if found
             glGetProgramInfoLog(shader, 512, NULL, infoLog);
@@ -61,6 +64,7 @@ void Shader::printCompileError(GLuint shader, std::string type)
     }
     else
     {
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
         if (!success)
         {   // display errors if found
             glGetShaderInfoLog(shader, 512, NULL, infoLog);
