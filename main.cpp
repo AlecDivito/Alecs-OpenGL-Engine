@@ -130,7 +130,7 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // Sets the background color
         glClear(GL_COLOR_BUFFER_BIT); // buffer is cleared to the buffer specified above
         // 5. Draw the object
-        glUseProgram(shader.Program); // Every shader and rendering call after glUseProgram will now use this program object
+        shader.Use(); // Every shader and rendering call after glUseProgram will now use this program object
         glBindVertexArray(VAO);
 //glDrawArrays(GL_TRIANGLES, 0, 3);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
