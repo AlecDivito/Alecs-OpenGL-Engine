@@ -8,13 +8,14 @@
 #include <GL/glew.h>
 // GLFW
 #include <GLFW/glfw3.h>
+// Personal
+#include <Shader.h>
 
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
 
 // functions
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
-std::string readFile(std::string path);
 
 int main()
 {
@@ -61,55 +62,7 @@ int main()
     // Set up Key Callbacks
     glfwSetKeyCallback(window, key_callback);
 
-    /**** Initilizing Program Shader Here (for right now) ****/
-    // READING SHADER FILES INTO MEMORY
-    std::string vertexShaderString  = readFile("shaders/shader.vs");
-    std::string fragShaderString    = readFile("shaders/shader.frag");
-    const GLchar* vertexShaderSource  = vertexShaderString.c_str();
-    const GLchar* fragShaderSource    = fragShaderString.c_str();
-
-    // READING SHADER FILES INTO MEMORY
-    // Checking for compile errors
-    GLint success;
-    GLchar infoLog[512];
-    GLuint vertexShader, fragShader, shaderProgram;
-
-    vertexShader = glCreateShader(GL_VERTEX_SHADER); // we tell what shader we want
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL); // specify ID, # of strings were sending, reference to those strings
-    glCompileShader(vertexShader); // compile the shader
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success); // check for errors
-    if (!success)
-    {   // display errors if found
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-
-    fragShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragShader, 1, &fragShaderSource, NULL);
-    glCompileShader(fragShader);
-    glGetShaderiv(fragShader, GL_COMPILE_STATUS, &success); // check for errors
-    if (!success)
-    {   // display errors if found
-        glGetShaderInfoLog(fragShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-
-    // Creating the shader program
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragShader);
-    glLinkProgram(shaderProgram);
-    glGetShaderiv(shaderProgram, GL_COMPILE_STATUS, &success); // check for errors
-    if (!success)
-    {   // display errors if found
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::PROGRAM::LINK_FAILED\n" << infoLog << std::endl;
-    }
-
-    // Delete uneed shaders
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragShader);
-    /**** Initilizing Program Shader Here (for right now) ****/
+    Shader shader("shaders/shader.vs", "shaders/shader.frag");
 
     // Triangle vertices
     GLfloat vertices[] = {
@@ -177,7 +130,7 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // Sets the background color
         glClear(GL_COLOR_BUFFER_BIT); // buffer is cleared to the buffer specified above
         // 5. Draw the object
-        glUseProgram(shaderProgram); // Every shader and rendering call after glUseProgram will now use this program object
+        glUseProgram(shader.Program); // Every shader and rendering call after glUseProgram will now use this program object
         glBindVertexArray(VAO);
 //glDrawArrays(GL_TRIANGLES, 0, 3);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -190,30 +143,6 @@ int main()
     return 0;
 }
 
-std::string readFile(std::string path)
-{
-    std::string shaderCode;
-    try
-    {
-        // Open Files
-        std::ifstream shaderFile(path);
-        std::stringstream shaderStream;
-        if (shaderFile.is_open())
-        {
-            // Read file buffer contents into streams
-            shaderStream << shaderFile.rdbuf();
-            // Close file handler
-            shaderFile.close();
-            // Convert stream into string
-            shaderCode = shaderStream.str();
-        }
-    }
-    catch(std::exception e)
-    {
-        std:: cout << "ERROR:SHADER: Failed to read shader file" << std::endl;
-    }
-    return shaderCode;
-}
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
