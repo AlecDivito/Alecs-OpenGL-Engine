@@ -3,11 +3,16 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <cmath>
 // GLEW
 #define GLEW_STATIC
 #include <GL/glew.h>
 // GLFW
 #include <GLFW/glfw3.h>
+// GLM
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 // Personal
 #include <Shader.h>
 
@@ -125,10 +130,16 @@ int main()
 
     while(!glfwWindowShouldClose(window)) // checks if window was instructed to close
     {
+        // Calculating delta time soon
+        GLfloat time = glfwGetTime();
+
         glfwPollEvents(); // checks if any events are triggered (like keyboard input or mouse movement events) and calls the corresponding functions
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // Sets the background color
         glClear(GL_COLOR_BUFFER_BIT); // buffer is cleared to the buffer specified above
+
+        shader.SetVector4f("ourColor", 0.0f,0.0f,(GLfloat)sin(time),0.0f);
+
         // 5. Draw the object
         shader.Use(); // Every shader and rendering call after glUseProgram will now use this program object
         glBindVertexArray(VAO);
