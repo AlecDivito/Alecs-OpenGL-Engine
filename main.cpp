@@ -1,8 +1,4 @@
 // STL
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
 #include <cmath>
 // GLEW
 #define GLEW_STATIC
@@ -10,11 +6,14 @@
 // GLFW
 #include <GLFW/glfw3.h>
 // GLM
-#include <GL/glew.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+// SOIL
+#include <SOIL.h>
 // Personal
-#include <Shader.h>
+#include "Shader.h"
+#include "Texture2D.h"
 
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
@@ -71,36 +70,36 @@ int main()
 
     // Triangle vertices
     GLfloat vertices[] = {
-        // front
-         0.5f,  0.5f, 1.0f,  // Top Right
-         0.5f, -0.5f, 1.0f,  // Bottom Right
-        -0.5f, -0.5f, 1.0f,  // Bottom Left
-        -0.5f,  0.5f, 1.0f,   // Top Left
-        // back
-         0.5f,  0.5f, -1.0f,  // Top Right
-         0.5f, -0.5f, -1.0f,  // Bottom Right
-        -0.5f, -0.5f, -1.0f,  // Bottom Left
-        -0.5f,  0.5f, -1.0f   // Top Left
+        // front                // colors           // Texture coordinates
+        -1.0f, -1.0f,  1.0f,    1.0f, 0.0f, 0.0f,   1.0f, 1.0f,
+         1.0f, -1.0f,  1.0f,    0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
+         1.0f,  1.0f,  1.0f,    0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
+        -1.0f,  1.0f,  1.0f,    1.0f, 1.0f, 1.0f,   0.0f, 1.0f,
+        // back                 // colors           // Texture coordinates
+        -1.0f, -1.0f, -1.0f,    1.0f, 0.0f, 0.0f,   1.0f, 1.0f,
+         1.0f, -1.0f, -1.0f,    0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
+         1.0f,  1.0f, -1.0f,    0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
+        -1.0f,  1.0f, -1.0f,    1.0f, 1.0f, 1.0f,   0.0f, 1.0f,
     };
     GLuint indices[] = { // Note we start at 0
-        // Front
-        0, 1, 3, // triangle 1
-        1, 2, 3,  // triangle 2
-        // Side right
-        0, 1, 5,
-        0, 4, 5,
-        // Side left
-        2, 3, 6,
-        3, 6, 7,
-        // Side up
-        0, 3, 4,
-        3, 4, 7,
-        // Side down
-        1, 2, 5,
-        2, 5, 6,
-        // back
-        4, 5, 7, // triangle 1
-        5, 6, 7  // triangle 2
+		// front
+		0, 1, 2,
+		2, 3, 0,
+		// top
+		1, 5, 6,
+		6, 2, 1,
+		// back
+		7, 6, 5,
+		5, 4, 7,
+		// bottom
+		4, 0, 3,
+		3, 7, 4,
+		// left
+		4, 5, 1,
+		1, 0, 4,
+		// right
+		3, 2, 6,
+		6, 7, 3,
 
     };
     // we need to store vertices in a buffer so we can manage them on the graphics card
@@ -119,14 +118,28 @@ int main()
     // We then tell how opengl should interprit the vertex data
     // (layout_Location, size of vertex attribute(vec3), dataType, GL_FALSE, length of stride, offset of where the position data begins in the buffer)
     // 3. Then we set our vertex attributes pointers
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(2);
     // 4. We unbind the vertex array object
     glBindVertexArray(0);
+
+    /**** Initilizing TEXTURES ****/
+    Texture2D texture;
+    texture.Generate("textures/wall.jpg");
+    /**** Initilizing TEXTURES ****/
 
     // How to draw the triangles
 //    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    // enable depth testing (to show depth in objects)
+    glEnable(GL_DEPTH_TEST);
 
     while(!glfwWindowShouldClose(window)) // checks if window was instructed to close
     {
@@ -136,15 +149,29 @@ int main()
         glfwPollEvents(); // checks if any events are triggered (like keyboard input or mouse movement events) and calls the corresponding functions
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // Sets the background color
-        glClear(GL_COLOR_BUFFER_BIT); // buffer is cleared to the buffer specified above
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // buffer is cleared to the buffer specified above
+
+        // Identity matrix
+        glm::mat4 trans;
+        glm::mat4 anim = glm::rotate(trans,(GLfloat)(time / 1000.0 * 1000), glm::vec3(0.0f, 1.0f, 0.0f));
+        // MODEL: push cude back a bit to not touch the camera
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0,0.0,-4.0));
+        // VIEW: reposition the camera
+        glm::mat4 view = glm::lookAt(glm::vec3(0.0, 2.0, 0.0), glm::vec3(0.0, 0.0, -4.0), glm::vec3(0.0, 1.0, 0.0));
+        // PROJECTION: set up a perspective
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1.0f * WIDTH/HEIGHT, 0.1f, 10.0f);
+        // Result
+        trans = projection * view * model * anim;
 
         shader.SetVector4f("ourColor", 0.0f,0.0f,(GLfloat)sin(time),0.0f);
+        shader.SetMatrix4("transform", trans);
 
         // 5. Draw the object
         shader.Use(); // Every shader and rendering call after glUseProgram will now use this program object
+        texture.Bind();
         glBindVertexArray(VAO);
 //glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0); // unbind object so we dont misconfigure them elsewhere
 
         glfwSwapBuffers(window); // swap the color buffer (a large buffer that contains color values for each pixel in GLFW's window)
