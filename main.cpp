@@ -13,6 +13,7 @@
 #include <SOIL.h>
 // Personal
 #include "Shader.h"
+#include "Texture2D.h"
 
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
@@ -128,34 +129,10 @@ int main()
     // 4. We unbind the vertex array object
     glBindVertexArray(0);
 
-    /**** Initilizing TEXTURES (WILL BE PUT IN NEW CLASS SOON)****/
-    // Generating a Texture
-    GLuint texture; // create a id for our texture (num of textures id wanted to create, array or number var)
-    glGenTextures(1, &texture);
-    // Set texture as the current active texture object
-    glBindTexture(GL_TEXTURE_2D, texture);
-    // Set the texture wrapping/ filtering options (on the currently bound texture object)
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// Set texture wrapping to GL_REPEAT (usually basic wrapping method)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // Set texture filtering parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    // Load and generate the texture
-    // int width, height;
-    // load the image using SOIL
-    unsigned char* image = SOIL_load_image("textures/wall.jpg", &width, &height, 0, SOIL_LOAD_RGB);
-    //Now that the texture is bound, we can start generating a texture using the previously loaded image data
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-    // Once glTexImage2D is called, the currently bound texture object now has the texture image attached to it
-    // we could call glGenerateMipmap after generating the texture. This will automatically generate all the required mipmaps for the currently bound texture.
-    glGenerateMipmap(GL_TEXTURE_2D);
-
-    // Free the image memory
-    SOIL_free_image_data(image);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    /**** Initilizing TEXTURES (WILL BE PUT IN NEW CLASS SOON)****/
+    /**** Initilizing TEXTURES ****/
+    Texture2D texture;
+    texture.Generate("textures/wall.jpg");
+    /**** Initilizing TEXTURES ****/
 
     // How to draw the triangles
 //    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -191,7 +168,7 @@ int main()
 
         // 5. Draw the object
         shader.Use(); // Every shader and rendering call after glUseProgram will now use this program object
-        glBindTexture(GL_TEXTURE_2D, texture);
+        texture.Bind();
         glBindVertexArray(VAO);
 //glDrawArrays(GL_TRIANGLES, 0, 3);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
