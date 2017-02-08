@@ -1,8 +1,4 @@
 // STL
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
 #include <cmath>
 // GLEW
 #define GLEW_STATIC
@@ -13,6 +9,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+// SOIL
+#include <SOIL.h>
 // Personal
 #include "Shader.h"
 
@@ -71,16 +69,16 @@ int main()
 
     // Triangle vertices
     GLfloat vertices[] = {
-        // front            // front colors
-        -1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f,
-         1.0f, -1.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-         1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-        -1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f,
-        // back             // back colors
-        -1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,
-         1.0f, -1.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-         1.0f,  1.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-        -1.0f,  1.0f, -1.0f,  1.0f,  1.0f,  1.0f,
+        // front                // colors           // Texture coordinates
+        -1.0f, -1.0f,  1.0f,    1.0f, 0.0f, 0.0f,   1.0f, 1.0f,
+         1.0f, -1.0f,  1.0f,    0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
+         1.0f,  1.0f,  1.0f,    0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
+        -1.0f,  1.0f,  1.0f,    1.0f, 1.0f, 1.0f,   0.0f, 1.0f,
+        // back                 // colors           // Texture coordinates
+        -1.0f, -1.0f, -1.0f,    1.0f, 0.0f, 0.0f,   1.0f, 1.0f,
+         1.0f, -1.0f, -1.0f,    0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
+         1.0f,  1.0f, -1.0f,    0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
+        -1.0f,  1.0f, -1.0f,    1.0f, 1.0f, 1.0f,   0.0f, 1.0f,
     };
     GLuint indices[] = { // Note we start at 0
 		// front
@@ -119,13 +117,45 @@ int main()
     // We then tell how opengl should interprit the vertex data
     // (layout_Location, size of vertex attribute(vec3), dataType, GL_FALSE, length of stride, offset of where the position data begins in the buffer)
     // 3. Then we set our vertex attributes pointers
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
     glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(2);
     // 4. We unbind the vertex array object
     glBindVertexArray(0);
+
+    /**** Initilizing TEXTURES (WILL BE PUT IN NEW CLASS SOON)****/
+    // Generating a Texture
+    GLuint texture; // create a id for our texture (num of textures id wanted to create, array or number var)
+    glGenTextures(1, &texture);
+    // Set texture as the current active texture object
+    glBindTexture(GL_TEXTURE_2D, texture);
+    // Set the texture wrapping/ filtering options (on the currently bound texture object)
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// Set texture wrapping to GL_REPEAT (usually basic wrapping method)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // Set texture filtering parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Load and generate the texture
+    // int width, height;
+    // load the image using SOIL
+    unsigned char* image = SOIL_load_image("textures/wall.jpg", &width, &height, 0, SOIL_LOAD_RGB);
+    //Now that the texture is bound, we can start generating a texture using the previously loaded image data
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+    // Once glTexImage2D is called, the currently bound texture object now has the texture image attached to it
+    // we could call glGenerateMipmap after generating the texture. This will automatically generate all the required mipmaps for the currently bound texture.
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    // Free the image memory
+    SOIL_free_image_data(image);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    /**** Initilizing TEXTURES (WILL BE PUT IN NEW CLASS SOON)****/
 
     // How to draw the triangles
 //    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -161,6 +191,7 @@ int main()
 
         // 5. Draw the object
         shader.Use(); // Every shader and rendering call after glUseProgram will now use this program object
+        glBindTexture(GL_TEXTURE_2D, texture);
         glBindVertexArray(VAO);
 //glDrawArrays(GL_TRIANGLES, 0, 3);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
