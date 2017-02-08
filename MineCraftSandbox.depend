@@ -1,10 +1,16 @@
 # depslib dependency file v1.0
-1486353254 source:/home/divitoa/Program/c++/MineCraftSandbox/main.cpp
+1486511019 source:/home/divitoa/Program/c++/MineCraftSandbox/main.cpp
 	<iostream>
 	<fstream>
+	<sstream>
 	<string>
+	<cmath>
 	<GL/glew.h>
 	<GLFW/glfw3.h>
+	<GL/glew.h>
+	<glm/glm.hpp>
+	<glm/gtc/type_ptr.hpp>
+	"Shader.h"
 
 1469335416 /home/divitoa/Program/c++/libs/glew-2.0.0/include/GL/glew.h
 	<stddef.h>
@@ -60,5 +66,8 @@
 	<glm/gtc/type_ptr.hpp>
 
 1486435674 source:/home/divitoa/Program/c++/OpenGL-Engine/src/Shader.cpp
+	"Shader.h"
+
+1486503169 source:/home/divitoa/Program/c++/MineCraftSandbox/src/Shader.cpp
 	"Shader.h"
 
