@@ -12,11 +12,11 @@
 // SOIL
 #include <SOIL.h>
 // Personal
-#include "Shader.h"
-#include "Texture2D.h"
+#include "include/Shader.h"
+#include "include/Texture2D.h"
 
 // Window dimensions
-const GLuint WIDTH = 800, HEIGHT = 600;
+const GLuint WIDTH = 1600, HEIGHT = 900;
 
 // functions
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
@@ -102,6 +102,21 @@ int main()
 		6, 7, 3,
 
     };
+    // Triangle positions
+    glm::vec3 cubePositions[] = {
+      glm::vec3( 0.0f,  0.0f,  0.0f),
+      glm::vec3( 2.0f,  5.0f, -15.0f),
+      glm::vec3(-1.5f, -2.2f, -2.5f),
+      glm::vec3(-3.8f, -2.0f, -12.3f),
+      glm::vec3( 2.4f, -0.4f, -3.5f),
+      glm::vec3(-1.7f,  3.0f, -7.5f),
+      glm::vec3( 1.3f, -2.0f, -2.5f),
+      glm::vec3( 1.5f,  2.0f, -2.5f),
+      glm::vec3( 1.5f,  0.2f, -1.5f),
+      glm::vec3(-1.3f,  1.0f, -1.5f)
+    };
+
+
     // we need to store vertices in a buffer so we can manage them on the graphics card
     GLuint VBO, VAO, EBO;
     glGenVertexArrays(1, &VAO);
@@ -149,29 +164,34 @@ int main()
         glfwPollEvents(); // checks if any events are triggered (like keyboard input or mouse movement events) and calls the corresponding functions
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // Sets the background color
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // buffer is cleared to the buffer specified above
-
-        // Identity matrix
-        glm::mat4 trans;
-        glm::mat4 anim = glm::rotate(trans,(GLfloat)(time / 1000.0 * 1000), glm::vec3(0.0f, 1.0f, 0.0f));
-        // MODEL: push cude back a bit to not touch the camera
-        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0,0.0,-4.0));
-        // VIEW: reposition the camera
-        glm::mat4 view = glm::lookAt(glm::vec3(0.0, 2.0, 0.0), glm::vec3(0.0, 0.0, -4.0), glm::vec3(0.0, 1.0, 0.0));
-        // PROJECTION: set up a perspective
-        glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1.0f * WIDTH/HEIGHT, 0.1f, 10.0f);
-        // Result
-        trans = projection * view * model * anim;
-
-        shader.SetVector4f("ourColor", 0.0f,0.0f,(GLfloat)sin(time),0.0f);
-        shader.SetMatrix4("transform", trans);
+        // buffer is cleared to the buffer specified above
+        // z-buffer is cleared for the next frame
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // 5. Draw the object
         shader.Use(); // Every shader and rendering call after glUseProgram will now use this program object
         texture.Bind();
         glBindVertexArray(VAO);
-//glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        for(int i = 0; i < (sizeof(cubePositions)/sizeof(*cubePositions)); i++)
+        {
+            // Identity matrix
+            glm::mat4 trans;
+            glm::mat4 anim = glm::rotate(trans,(GLfloat)(time / 1000.0 * 1000), glm::vec3(0.0f, 1.0f, 0.0f));
+            // MODEL: push cude back a bit to not touch the camera
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), cubePositions[i]);
+            // VIEW: reposition the camera
+            glm::mat4 view = glm::lookAt(glm::vec3(0.0, -2.0, 0.0), glm::vec3(0.0, 0.0, -4.0), glm::vec3(0.0, 1.0, 0.0));
+            // PROJECTION: set up a perspective
+            glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1.0f * WIDTH/HEIGHT, 0.1f, 100.0f);
+            // Result
+            trans = projection * view * model * anim;
+
+            shader.SetVector4f("ourColor", 0.0f,0.0f,(GLfloat)sin(time),0.0f);
+            shader.SetMatrix4("transform", trans);
+
+            //glDrawArrays(GL_TRIANGLES, 0, 3);
+            glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        }
         glBindVertexArray(0); // unbind object so we dont misconfigure them elsewhere
 
         glfwSwapBuffers(window); // swap the color buffer (a large buffer that contains color values for each pixel in GLFW's window)

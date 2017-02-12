@@ -55,9 +55,13 @@
 			<Add directory="/home/divitoa/Program/c++/libs/glew-2.0.0/build/lib" />
 			<Add directory="/home/divitoa/Program/c++/libs/assimp-master/lib" />
 		</Linker>
+		<Unit filename="include/Shader.h" />
+		<Unit filename="include/Texture2D.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="shaders/shader.frag" />
 		<Unit filename="shaders/shader.vs" />
+		<Unit filename="src/Shader.cpp" />
+		<Unit filename="src/Texture2D.cpp" />
 		<Extensions>
 			<envvars />
 			<code_completion />
