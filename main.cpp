@@ -12,6 +12,7 @@
 // SOIL
 #include <SOIL.h>
 // Personal
+#include "ResourceManager.h"
 #include "Camera.h"
 #include "include/Shader.h"
 #include "include/Texture2D.h"
@@ -164,8 +165,8 @@ int main()
     glBindVertexArray(0);
 
     /**** Initilizing TEXTURES ****/
-    Texture2D texture;
-    texture.Generate("textures/wall.jpg");
+    ResourceManager::addTexture("wall", "textures/wall.jpg");
+    Texture2D texture = ResourceManager::getTexture("wall");
     /**** Initilizing TEXTURES ****/
 
     // How to draw the triangles
@@ -212,7 +213,7 @@ int main()
             shader.SetMatrix4("transform", trans);
 
             //glDrawArrays(GL_TRIANGLES, 0, 3);
-            glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+//            glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         }
         glBindVertexArray(0); // unbind object so we dont misconfigure them elsewhere
 

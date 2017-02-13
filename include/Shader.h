@@ -18,6 +18,7 @@ class Shader
     public:
         // State
         GLuint Program;
+        Shader() {};
         Shader(std::string vertexShaderPath, std::string fragmentShaderPath, std::string geometryShaderPath="");
         void Use();
         // Shader helper functions
