@@ -1,5 +1,6 @@
 // STL
 #include <cmath>
+#include <iostream>
 // GLEW
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -86,7 +87,10 @@ int main()
     glfwSetKeyCallback(window, key_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
 
-    Shader shader("shaders/shader.vs", "shaders/shader.frag");
+    ResourceManager::LoadShader("shaders/shader.vs", "shaders/shader.frag", NULL, "shader");
+    Shader shader = ResourceManager::GetShader("shader");
+    ResourceManager::LoadTexture("textures/wall.jpg", GL_TRUE, "wall");
+    Texture2D texture = ResourceManager::GetTexture("wall");
 
     // Triangle vertices
     GLfloat vertices[] = {
@@ -164,11 +168,6 @@ int main()
     // 4. We unbind the vertex array object
     glBindVertexArray(0);
 
-    /**** Initilizing TEXTURES ****/
-    ResourceManager::addTexture("wall", "textures/wall.jpg");
-    Texture2D texture = ResourceManager::getTexture("wall");
-    /**** Initilizing TEXTURES ****/
-
     // How to draw the triangles
 //    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -213,7 +212,7 @@ int main()
             shader.SetMatrix4("transform", trans);
 
             //glDrawArrays(GL_TRIANGLES, 0, 3);
-//            glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+            glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         }
         glBindVertexArray(0); // unbind object so we dont misconfigure them elsewhere
 

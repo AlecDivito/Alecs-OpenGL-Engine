@@ -2,26 +2,26 @@
 #define SHADER_H
 
 #include <string>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-// GLEW
-#define GLEW_STATIC
-#include <GL/glew.h>
-// GLM
+
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+// General purpose shader object. Compiles from file. generates
+// compile/link-time error messages and hosts several utility
+// functions for easy management
 class Shader
 {
     public:
         // State
-        GLuint Program;
+        GLuint ID;
+        // Constructor
         Shader() {};
-        Shader(std::string vertexShaderPath, std::string fragmentShaderPath, std::string geometryShaderPath="");
-        void Use();
-        // Shader helper functions
+        // Sets the current shader as active
+        Shader &Use();
+        // Compiles the shader from given source code
+        void    Compile(const GLchar* vertexSource, const GLchar* fragmentSource, const GLchar* geometrySource = NULL); // Note: geometry source code is optional
+        // Utility functions
         void    SetFloat    (const GLchar* name, GLfloat value,          GLboolean useShader = false);
         void    SetInteger  (const GLchar* name, GLint   value,          GLboolean useShader = false);
         void    SetVector2f (const GLchar* name, GLfloat x, GLfloat y,   GLboolean useShader = false);
@@ -31,11 +31,10 @@ class Shader
         void    SetVector4f (const GLchar* name, GLfloat x, GLfloat y, GLfloat z, GLfloat w, GLboolean useShader = false);
         void    SetVector4f (const GLchar* name, const glm::vec4 &value,  GLboolean useShader = false);
         void    SetMatrix4  (const GLchar* name, const glm::mat4 &matrix, GLboolean useShader = false);
-
     protected:
     private:
-        void printCompileError(GLuint shader, std::string type);
-        std::string readShaderFile(std::string path);
+        // Checks if compilation or linking failed and if so, print the error logs
+        void    checkCompileErrors(GLuint object, std::string type);
 };
 
 #endif // SHADER_H
