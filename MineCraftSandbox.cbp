@@ -5,6 +5,7 @@
 		<Option title="MineCraftSandbox" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
+		<Option virtualFolders="include/;" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/MineCraftSandbox" prefix_auto="1" extension_auto="1" />
@@ -13,6 +14,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="include" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -22,6 +24,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -55,12 +58,18 @@
 			<Add directory="/home/divitoa/Program/c++/libs/glew-2.0.0/build/lib" />
 			<Add directory="/home/divitoa/Program/c++/libs/assimp-master/lib" />
 		</Linker>
+		<Unit filename="include/Camera.h" />
+		<Unit filename="include/ResourceManager.h" />
 		<Unit filename="include/Shader.h" />
 		<Unit filename="include/Texture2D.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="shaders/shader.frag" />
 		<Unit filename="shaders/shader.vs" />
-		<Unit filename="src/Shader.cpp" />
+		<Unit filename="src/Camera.cpp" />
+		<Unit filename="src/ResourceManager.cpp" />
+		<Unit filename="src/Shader.cpp">
+			<Option virtualFolder="include/" />
+		</Unit>
 		<Unit filename="src/Texture2D.cpp" />
 		<Extensions>
 			<envvars />

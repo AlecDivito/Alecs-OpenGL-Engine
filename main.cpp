@@ -1,5 +1,6 @@
 // STL
 #include <cmath>
+#include <iostream>
 // GLEW
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -12,14 +13,30 @@
 // SOIL
 #include <SOIL.h>
 // Personal
+#include "ResourceManager.h"
+#include "Camera.h"
 #include "include/Shader.h"
 #include "include/Texture2D.h"
 
 // Window dimensions
 const GLuint WIDTH = 1600, HEIGHT = 900;
 
+// keys
+bool firstMouse = true;
+bool keys[1024];
+GLfloat deltaTime = 0.0f;
+GLfloat lastFrame = 0.0f;
+GLfloat lastX =  WIDTH  / 2.0;
+GLfloat lastY =  HEIGHT / 2.0;
+
+/**** Initilizing Camera ****/
+Camera camera;
+/**** Initilizing Camera ****/
+
 // functions
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void do_movement();
 
 int main()
 {
@@ -56,6 +73,9 @@ int main()
         return 1;
     }
 
+    // Set Options
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
     // Set the size of the rendering window so OpenGL displays the data and coordinates with respect to the window
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
@@ -65,8 +85,12 @@ int main()
 
     // Set up Key Callbacks
     glfwSetKeyCallback(window, key_callback);
+    glfwSetCursorPosCallback(window, mouse_callback);
 
-    Shader shader("shaders/shader.vs", "shaders/shader.frag");
+    ResourceManager::LoadShader("shaders/shader.vs", "shaders/shader.frag", NULL, "shader");
+    Shader shader = ResourceManager::GetShader("shader");
+    ResourceManager::LoadTexture("textures/wall.jpg", GL_TRUE, "wall");
+    Texture2D texture = ResourceManager::GetTexture("wall");
 
     // Triangle vertices
     GLfloat vertices[] = {
@@ -144,11 +168,6 @@ int main()
     // 4. We unbind the vertex array object
     glBindVertexArray(0);
 
-    /**** Initilizing TEXTURES ****/
-    Texture2D texture;
-    texture.Generate("textures/wall.jpg");
-    /**** Initilizing TEXTURES ****/
-
     // How to draw the triangles
 //    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -160,8 +179,11 @@ int main()
     {
         // Calculating delta time soon
         GLfloat time = glfwGetTime();
+        deltaTime = time - lastFrame;
+        lastFrame = time;
 
         glfwPollEvents(); // checks if any events are triggered (like keyboard input or mouse movement events) and calls the corresponding functions
+        do_movement();
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // Sets the background color
         // buffer is cleared to the buffer specified above
@@ -172,6 +194,10 @@ int main()
         shader.Use(); // Every shader and rendering call after glUseProgram will now use this program object
         texture.Bind();
         glBindVertexArray(VAO);
+
+        // VIEW: reposition the camera
+        // PROJECTION: set up a perspective
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1.0f * WIDTH/HEIGHT, 0.1f, 2000.0f);
         for(int i = 0; i < (sizeof(cubePositions)/sizeof(*cubePositions)); i++)
         {
             // Identity matrix
@@ -179,12 +205,8 @@ int main()
             glm::mat4 anim = glm::rotate(trans,(GLfloat)(time / 1000.0 * 1000), glm::vec3(0.0f, 1.0f, 0.0f));
             // MODEL: push cude back a bit to not touch the camera
             glm::mat4 model = glm::translate(glm::mat4(1.0f), cubePositions[i]);
-            // VIEW: reposition the camera
-            glm::mat4 view = glm::lookAt(glm::vec3(0.0, -2.0, 0.0), glm::vec3(0.0, 0.0, -4.0), glm::vec3(0.0, 1.0, 0.0));
-            // PROJECTION: set up a perspective
-            glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1.0f * WIDTH/HEIGHT, 0.1f, 100.0f);
             // Result
-            trans = projection * view * model * anim;
+            trans = projection * camera.GetViewMatrix() * model * anim;
 
             shader.SetVector4f("ourColor", 0.0f,0.0f,(GLfloat)sin(time),0.0f);
             shader.SetMatrix4("transform", trans);
@@ -196,7 +218,10 @@ int main()
 
         glfwSwapBuffers(window); // swap the color buffer (a large buffer that contains color values for each pixel in GLFW's window)
     }
-
+    // Properly de-allocate all resources once they've outlived their purpose
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
     glfwTerminate(); // Terminate glfw
     return 0;
 }
@@ -210,4 +235,43 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     {
         glfwSetWindowShouldClose(window, GL_TRUE);
     }
+    if(key >= 0 && key < 1024)
+    {
+        if (action == GLFW_PRESS)
+        {
+            keys[key] = true;
+        }
+        else if(action == GLFW_RELEASE)
+        {
+            keys[key] = false;
+        }
+    }
+}
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    if(firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+    GLfloat xoffset = xpos - lastX;
+    GLfloat yoffset = lastY - ypos;// Reversed since y-coordinates go from bottom to left
+
+    lastX = xpos;
+    lastY = ypos;
+    camera.ProcessMouseMovement(xoffset,yoffset);
+}
+
+void do_movement()
+{
+    // Camera controls
+    if(keys[GLFW_KEY_W])
+        camera.ProcessKeyboard(FORWARD, deltaTime);
+    if(keys[GLFW_KEY_S])
+        camera.ProcessKeyboard(BACKWARD, deltaTime);
+    if(keys[GLFW_KEY_A])
+        camera.ProcessKeyboard(LEFT, deltaTime);
+    if(keys[GLFW_KEY_D])
+        camera.ProcessKeyboard(RIGHT, deltaTime);
 }
