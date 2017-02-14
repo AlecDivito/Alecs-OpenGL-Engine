@@ -59,6 +59,10 @@
 			<Add directory="/home/divitoa/Program/c++/libs/assimp-master/lib" />
 		</Linker>
 		<Unit filename="include/Camera.h" />
+		<Unit filename="include/Cube.h" />
+		<Unit filename="include/Game.h" />
+		<Unit filename="include/GameObject.h" />
+		<Unit filename="include/Player.h" />
 		<Unit filename="include/ResourceManager.h" />
 		<Unit filename="include/Shader.h" />
 		<Unit filename="include/Texture2D.h" />
@@ -66,6 +70,10 @@
 		<Unit filename="shaders/shader.frag" />
 		<Unit filename="shaders/shader.vs" />
 		<Unit filename="src/Camera.cpp" />
+		<Unit filename="src/Cube.cpp" />
+		<Unit filename="src/Game.cpp" />
+		<Unit filename="src/GameObject.cpp" />
+		<Unit filename="src/Player.cpp" />
 		<Unit filename="src/ResourceManager.cpp" />
 		<Unit filename="src/Shader.cpp">
 			<Option virtualFolder="include/" />

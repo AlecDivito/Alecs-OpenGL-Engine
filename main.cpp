@@ -109,7 +109,7 @@ int main()
 
 
     // We create a cube
-    Cube cube;
+    Cube cube(texture);
 
     // How to draw the triangles
 //    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -135,7 +135,6 @@ int main()
 
         // 5. Draw the object
         shader.Use(); // Every shader and rendering call after glUseProgram will now use this program object
-        texture.Bind();
         cube.Bind(); // we bind the cube to the current context
 
         // VIEW: reposition the camera

@@ -45,8 +45,10 @@ const GLfloat Cube::vertices[] = {
     -1.0f,  1.0f, -1.0f,  0.0f, 1.0f
 };
 
-Cube::Cube(Texture2D texture) : sprite(texture)
+Cube::Cube(Texture2D texture)
 {
+    this->sprite = texture;
+
     // store vertices in a buffer to manage them on the graphics card
     glGenVertexArrays(1, &this->VAO);
     glGenBuffers(1, &this->VBO);
