@@ -14,6 +14,6 @@ GameObject::GameObject(glm::vec3 pos, glm::vec3 size, Texture2D sprite,
     this->Position = pos;
     this->Size = size;
     this->sprite = sprite;
-    this->color = color;
-    this->velocity = velocity;
+    this->Color = color;
+    this->Velocity = velocity;
 }

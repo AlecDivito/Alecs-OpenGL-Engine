@@ -28,7 +28,7 @@ class GameObject
         // Draw sprite
         virtual void Draw() = 0;
         // collision
-        virtual Glboolean CheckCollision(GameObject &obj) = 0;
+        virtual GLboolean CheckCollision(GameObject &obj) = 0;
 
     protected:
 

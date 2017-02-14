@@ -17,6 +17,7 @@
 #include "Camera.h"
 #include "include/Shader.h"
 #include "include/Texture2D.h"
+#include "Cube.h"
 
 // Window dimensions
 const GLuint WIDTH = 1600, HEIGHT = 900;
@@ -92,41 +93,7 @@ int main()
     ResourceManager::LoadTexture("textures/wall.jpg", GL_TRUE, "wall");
     Texture2D texture = ResourceManager::GetTexture("wall");
 
-    // Triangle vertices
-    GLfloat vertices[] = {
-        // front                // colors           // Texture coordinates
-        -1.0f, -1.0f,  1.0f,    1.0f, 0.0f, 0.0f,   1.0f, 1.0f,
-         1.0f, -1.0f,  1.0f,    0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
-         1.0f,  1.0f,  1.0f,    0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
-        -1.0f,  1.0f,  1.0f,    1.0f, 1.0f, 1.0f,   0.0f, 1.0f,
-        // back                 // colors           // Texture coordinates
-        -1.0f, -1.0f, -1.0f,    1.0f, 0.0f, 0.0f,   1.0f, 1.0f,
-         1.0f, -1.0f, -1.0f,    0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
-         1.0f,  1.0f, -1.0f,    0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
-        -1.0f,  1.0f, -1.0f,    1.0f, 1.0f, 1.0f,   0.0f, 1.0f,
-    };
-    GLuint indices[] = { // Note we start at 0
-		// front
-		0, 1, 2,
-		2, 3, 0,
-		// top
-		1, 5, 6,
-		6, 2, 1,
-		// back
-		7, 6, 5,
-		5, 4, 7,
-		// bottom
-		4, 0, 3,
-		3, 7, 4,
-		// left
-		4, 5, 1,
-		1, 0, 4,
-		// right
-		3, 2, 6,
-		6, 7, 3,
-
-    };
-    // Triangle positions
+        // Triangle positions
     glm::vec3 cubePositions[] = {
       glm::vec3( 0.0f,  0.0f,  0.0f),
       glm::vec3( 2.0f,  5.0f, -15.0f),
@@ -141,32 +108,8 @@ int main()
     };
 
 
-    // we need to store vertices in a buffer so we can manage them on the graphics card
-    GLuint VBO, VAO, EBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);// (num of buffers, [] of buffers)
-    glGenBuffers(1, &EBO);
-    // 1. Bind vertex Array Object
-    glBindVertexArray(VAO);
-    // 2. Copy our vertices array in a buffer for OpenGl to use
-    glBindBuffer(GL_ARRAY_BUFFER, VBO); // (specifies the targen buffer object, the buffer  object's ID)
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    // Now do the same thing just with the element buffer object
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-    // We then tell how opengl should interprit the vertex data
-    // (layout_Location, size of vertex attribute(vec3), dataType, GL_FALSE, length of stride, offset of where the position data begins in the buffer)
-    // 3. Then we set our vertex attributes pointers
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(1);
-
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(2);
-    // 4. We unbind the vertex array object
-    glBindVertexArray(0);
+    // We create a cube
+    Cube cube;
 
     // How to draw the triangles
 //    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -193,7 +136,7 @@ int main()
         // 5. Draw the object
         shader.Use(); // Every shader and rendering call after glUseProgram will now use this program object
         texture.Bind();
-        glBindVertexArray(VAO);
+        cube.Bind(); // we bind the cube to the current context
 
         // VIEW: reposition the camera
         // PROJECTION: set up a perspective
@@ -211,17 +154,12 @@ int main()
             shader.SetVector4f("ourColor", 0.0f,0.0f,(GLfloat)sin(time),0.0f);
             shader.SetMatrix4("transform", trans);
 
-            //glDrawArrays(GL_TRIANGLES, 0, 3);
-            glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+            cube.Draw();
         }
         glBindVertexArray(0); // unbind object so we dont misconfigure them elsewhere
 
         glfwSwapBuffers(window); // swap the color buffer (a large buffer that contains color values for each pixel in GLFW's window)
     }
-    // Properly de-allocate all resources once they've outlived their purpose
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
     glfwTerminate(); // Terminate glfw
     return 0;
 }

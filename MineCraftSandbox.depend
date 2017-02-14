@@ -1,6 +1,7 @@
 # depslib dependency file v1.0
-1486958717 source:/home/divitoa/Program/c++/MineCraftSandbox/main.cpp
+1487041759 source:/home/divitoa/Program/c++/MineCraftSandbox/main.cpp
 	<cmath>
+	<iostream>
 	<GL/glew.h>
 	<GLFW/glfw3.h>
 	<glm/glm.hpp>
@@ -11,6 +12,7 @@
 	"Camera.h"
 	"include/Shader.h"
 	"include/Texture2D.h"
+	"Cube.h"
 
 1469335416 /home/divitoa/Program/c++/libs/glew-2.0.0/include/GL/glew.h
 	<stddef.h>
@@ -68,42 +70,59 @@
 1486435674 source:/home/divitoa/Program/c++/OpenGL-Engine/src/Shader.cpp
 	"Shader.h"
 
-1486503169 source:/home/divitoa/Program/c++/MineCraftSandbox/src/Shader.cpp
+1486960401 source:/home/divitoa/Program/c++/MineCraftSandbox/src/Shader.cpp
 	"Shader.h"
-
-1486959501 /home/divitoa/Program/c++/MineCraftSandbox/include/Shader.h
-	<string>
 	<iostream>
-	<fstream>
-	<sstream>
-	<GL/glew.h>
+
+1486960401 /home/divitoa/Program/c++/MineCraftSandbox/include/Shader.h
+	<string>
 	<GL/glew.h>
 	<glm/glm.hpp>
 	<glm/gtc/type_ptr.hpp>
 
-1486959501 /home/divitoa/Program/c++/MineCraftSandbox/include/Texture2D.h
+1486960401 /home/divitoa/Program/c++/MineCraftSandbox/include/Texture2D.h
 	<GL/glew.h>
 
-1486959501 source:/home/divitoa/Program/c++/MineCraftSandbox/src/Texture2D.cpp
+1486960401 source:/home/divitoa/Program/c++/MineCraftSandbox/src/Texture2D.cpp
+	<iostream>
 	"Texture2D.h"
 
-1486938971 /home/divitoa/Program/c++/MineCraftSandbox/include/Camera.h
+1486960401 /home/divitoa/Program/c++/MineCraftSandbox/include/Camera.h
 	<vector>
 	<GL/glew.h>
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
 	<glm/gtc/type_ptr.hpp>
 
-1486940209 source:/home/divitoa/Program/c++/MineCraftSandbox/src/Camera.cpp
+1486960401 source:/home/divitoa/Program/c++/MineCraftSandbox/src/Camera.cpp
 	"Camera.h"
 
-1486959501 source:/home/divitoa/Program/c++/MineCraftSandbox/src/ResourceManager.cpp
+1486960401 source:/home/divitoa/Program/c++/MineCraftSandbox/src/ResourceManager.cpp
 	"ResourceManager.h"
+	<iostream>
+	<sstream>
+	<fstream>
+	<SOIL.h>
 
-1486959501 /home/divitoa/Program/c++/MineCraftSandbox/include/ResourceManager.h
+1486960401 /home/divitoa/Program/c++/MineCraftSandbox/include/ResourceManager.h
 	<map>
 	<string>
-	<SOIL.h>
+	<GL/glew.h>
 	"Texture2D.h"
 	"Shader.h"
+
+1487042116 /home/divitoa/Program/c++/MineCraftSandbox/include/Cube.h
+	<GL/glew.h>
+	"GameObject.h"
+
+1487041554 /home/divitoa/Program/c++/MineCraftSandbox/include/GameObject.h
+	<GL/glew.h>
+	<glm/glm.hpp>
+	"Texture2D.h"
+
+1487042229 source:/home/divitoa/Program/c++/MineCraftSandbox/src/Cube.cpp
+	"Cube.h"
+
+1487042253 source:/home/divitoa/Program/c++/MineCraftSandbox/src/GameObject.cpp
+	"GameObject.h"
 
