@@ -11,6 +11,5 @@ uniform sampler2D ourTexture; // this will be used to send the image
 
 void main()
 {
-    //color = vec4(ourColors, 1.0f);
-    color = texture(ourTexture, TexCoord);
+    color = ourColor * texture(ourTexture, TexCoord);
 }
