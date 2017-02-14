@@ -45,9 +45,8 @@ const GLfloat Cube::vertices[] = {
     -1.0f,  1.0f, -1.0f,  0.0f, 1.0f
 };
 
-Cube::Cube()
+Cube::Cube(Texture2D texture) : sprite(texture)
 {
-
     // store vertices in a buffer to manage them on the graphics card
     glGenVertexArrays(1, &this->VAO);
     glGenBuffers(1, &this->VBO);
@@ -76,7 +75,9 @@ Cube::~Cube()
 
 void Cube::Bind()
 {
-     glBindVertexArray(this->VAO);
+    // Bind the sprite to the 3D cube
+    sprite.Bind();
+    glBindVertexArray(this->VAO);
 }
 
 void Cube::Draw()

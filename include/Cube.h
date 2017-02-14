@@ -10,7 +10,8 @@ class Cube : public GameObject
     public:
         // Cubes opengl IDs
         GLuint VBO, VAO;
-        Cube();
+        // Constructor and deconstructor
+        Cube(Texture2D texture);
         virtual ~Cube();
         // Bind Objects
         void Bind();
