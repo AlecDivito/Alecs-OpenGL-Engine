@@ -14,12 +14,12 @@ Game::~Game()
 void Game::Init()
 {
     // Load shaders
-    //ResourceManager::LoadShader("shaders/shader.vs", "shaders/shader.frag", NULL, "shader");
-    //ResourceManager::GetShader("shader").Use();
+    ResourceManager::LoadShader("shaders/shader.vs", "shaders/shader.frag", NULL, "shader");
+    ResourceManager::GetShader("shader").Use();
     // Set render-specific controls
 
     // Load textures
-    //ResourceManager::LoadTexture("textures/container.jpg", GL_TRUE, "wall");
+    ResourceManager::LoadTexture("textures/container.jpg", GL_TRUE, "wall");
 }
 
 void Game::Update(GLfloat dt)

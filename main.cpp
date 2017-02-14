@@ -18,26 +18,24 @@
 #include "include/Shader.h"
 #include "include/Texture2D.h"
 #include "Cube.h"
+#include "Game.h"
 
 // Window dimensions
 const GLuint WIDTH = 1600, HEIGHT = 900;
 
 // keys
 bool firstMouse = true;
-bool keys[1024];
-GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
 GLfloat lastX =  WIDTH  / 2.0;
 GLfloat lastY =  HEIGHT / 2.0;
 
 /**** Initilizing Camera ****/
-Camera camera;
+Game game(WIDTH, HEIGHT);
 /**** Initilizing Camera ****/
 
 // functions
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void do_movement();
 
 int main()
 {
@@ -82,18 +80,17 @@ int main()
     glfwGetFramebufferSize(window, &width, &height);
     // left, bottom, right, top of the screen coordiantes (we map (-1, 1) to (0, 800) and (0, 600))
     glViewport(0, 0, width, height);
+    // enable depth testing (to show depth in objects)
+    glEnable(GL_DEPTH_TEST);
     /**** Initilizing everything important ****/
 
     // Set up Key Callbacks
     glfwSetKeyCallback(window, key_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
 
-    ResourceManager::LoadShader("shaders/shader.vs", "shaders/shader.frag", NULL, "shader");
-    Shader shader = ResourceManager::GetShader("shader");
-    ResourceManager::LoadTexture("textures/wall.jpg", GL_TRUE, "wall");
-    Texture2D texture = ResourceManager::GetTexture("wall");
+    game.Init();
 
-        // Triangle positions
+    // Triangle positions
     glm::vec3 cubePositions[] = {
       glm::vec3( 0.0f,  0.0f,  0.0f),
       glm::vec3( 2.0f,  5.0f, -15.0f),
@@ -109,38 +106,39 @@ int main()
 
 
     // We create a cube
-    Cube cube(texture);
+    Cube cube(ResourceManager::GetTexture("wall"));
+
 
     // How to draw the triangles
 //    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    // enable depth testing (to show depth in objects)
-    glEnable(GL_DEPTH_TEST);
-
     while(!glfwWindowShouldClose(window)) // checks if window was instructed to close
     {
         // Calculating delta time soon
         GLfloat time = glfwGetTime();
-        deltaTime = time - lastFrame;
+        GLfloat deltaTime = time - lastFrame;
         lastFrame = time;
-
         glfwPollEvents(); // checks if any events are triggered (like keyboard input or mouse movement events) and calls the corresponding functions
-        do_movement();
 
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // Sets the background color
-        // buffer is cleared to the buffer specified above
-        // z-buffer is cleared for the next frame
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // Process keyboard inputs
+        game.ProcessInput(deltaTime);
 
-        // 5. Draw the object
-        shader.Use(); // Every shader and rendering call after glUseProgram will now use this program object
+        // Update objects
+        game.Update(deltaTime);
+
         cube.Bind(); // we bind the cube to the current context
+
+        // Render shit
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // Sets the background color
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        game.Render();
+
 
         // VIEW: reposition the camera
         // PROJECTION: set up a perspective
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1.0f * WIDTH/HEIGHT, 0.1f, 2000.0f);
-        for(int i = 0; i < (sizeof(cubePositions)/sizeof(*cubePositions)); i++)
+        for(unsigned int i = 0; i < (sizeof(cubePositions)/sizeof(*cubePositions)); i++)
         {
             // Identity matrix
             glm::mat4 trans;
@@ -148,10 +146,10 @@ int main()
             // MODEL: push cude back a bit to not touch the camera
             glm::mat4 model = glm::translate(glm::mat4(1.0f), cubePositions[i]);
             // Result
-            trans = projection * camera.GetViewMatrix() * model * anim;
+            trans = projection * game.camera.GetViewMatrix() * model * anim;
 
-            shader.SetVector4f("ourColor", 0.0f,0.0f,(GLfloat)sin(time),0.0f);
-            shader.SetMatrix4("transform", trans);
+            ResourceManager::GetShader("shader").SetVector4f("ourColor", 0.0f,(GLfloat)cos(time), (GLfloat)sin(time),1.0f);
+            ResourceManager::GetShader("shader").SetMatrix4("transform", trans);
 
             cube.Draw();
         }
@@ -176,11 +174,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     {
         if (action == GLFW_PRESS)
         {
-            keys[key] = true;
+            game.Keys[key] = true;
         }
         else if(action == GLFW_RELEASE)
         {
-            keys[key] = false;
+            game.Keys[key] = false;
         }
     }
 }
@@ -195,20 +193,8 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     GLfloat xoffset = xpos - lastX;
     GLfloat yoffset = lastY - ypos;// Reversed since y-coordinates go from bottom to left
 
+
     lastX = xpos;
     lastY = ypos;
-    camera.ProcessMouseMovement(xoffset,yoffset);
-}
-
-void do_movement()
-{
-    // Camera controls
-    if(keys[GLFW_KEY_W])
-        camera.ProcessKeyboard(FORWARD, deltaTime);
-    if(keys[GLFW_KEY_S])
-        camera.ProcessKeyboard(BACKWARD, deltaTime);
-    if(keys[GLFW_KEY_A])
-        camera.ProcessKeyboard(LEFT, deltaTime);
-    if(keys[GLFW_KEY_D])
-        camera.ProcessKeyboard(RIGHT, deltaTime);
+    game.camera.ProcessMouseMovement(xoffset,yoffset);
 }
