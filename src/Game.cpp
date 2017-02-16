@@ -15,7 +15,7 @@ void Game::Init()
 {
     // Load shaders
     ResourceManager::LoadShader("shaders/shader.vs", "shaders/shader.frag", NULL, "shader");
-    ResourceManager::GetShader("shader").Use();
+    ResourceManager::LoadShader("shaders/terrain.vs", "shaders/terrain.frag", NULL, "terrain");
     // Set render-specific controls
 
     // Load textures

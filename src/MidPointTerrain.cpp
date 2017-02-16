@@ -1,6 +1,6 @@
 #include "MidPointTerrain.h"
 
-MidPointTerrain::MidPointTerrain(int exponent)
+MidPointTerrain::MidPointTerrain(int exponent) : exponent(exponent)
 {
     this->resolution = pow(2, exponent) + 1;
     this->last = this->resolution - 1;
