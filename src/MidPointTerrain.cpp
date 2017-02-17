@@ -2,6 +2,7 @@
 
 MidPointTerrain::MidPointTerrain(int exponent) : exponent(exponent)
 {
+    srand(time(NULL));
     this->resolution = pow(2, exponent) + 1;
     this->last = this->resolution - 1;
     zeroHeightMap();
@@ -15,9 +16,19 @@ MidPointTerrain::~MidPointTerrain()
 // zero all elements inside the height map
 void MidPointTerrain::zeroHeightMap()
 {
-    for (unsigned int i = 0; i < this->resolution * this->resolution; ++i)
+    if(this->getSize() == 0)
     {
-        this->heightMap.push_back(0);
+        for (unsigned int i = 0; i < this->resolution * this->resolution; ++i)
+        {
+            this->heightMap.push_back(0);
+        }
+    }
+    else
+    {
+        for(unsigned int i = 0; i < this->resolution * this->resolution; ++i)
+        {
+            this->heightMap[i] = 0;
+        }
     }
 }
 
@@ -36,7 +47,7 @@ void MidPointTerrain::midPointDisplacement()
     // 1. Initialize the four corners of the height map to random values
     mpdInitCorners();
     // 2. Set the midpoints of each edge to the average of the two corners it’s between, plus or minus a random amount.
-    mpdDisplace(0, this->last, 0, this->last, 0.1);
+    // mpdDisplace(0, this->last, 0, this->last, 0.1);
     float spread = 0.3;
     for (int i = 0; i < this->exponent; ++i)
     {
@@ -143,7 +154,7 @@ float MidPointTerrain::getRandom()
 // return a random number
 float MidPointTerrain::jitter(float value, float spread)
 {
-    return (getRandom() + spread) + value;
+    return ((spread * getRandom() * 2) * spread) + value;
 }
 
 // return the index of the mid point
