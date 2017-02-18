@@ -3,6 +3,7 @@
 #include <cmath>
 #include <iostream>
 #include <vector>
+#include <algorithm>
 // GLEW
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -88,72 +89,9 @@ int main()
     glfwSetCursorPosCallback(window, mouse_callback);
 
     game.Init();
-    MidPointTerrain terrain(ResourceManager::GetShader("terrain"), 7);
+    MidPointTerrain terrain(ResourceManager::GetShader("terrain"), 2);
     terrain.MidPointDisplacement();
-    //terrain.InitTerrainMap();
-    GLuint VAO, VBO;
-    std::vector<GLfloat> terrainArrayMap;
-    float span = (float)terrain.Resolution;
-    for(unsigned int x = 0; x < terrain.Resolution-1; ++x)
-    {
-        int tempX = x + 1;
-        GLfloat xCoord_zero = 2 * (x/span) - 1;// x = 0
-        GLfloat xCoord_one =  2 * (tempX/span) - 1;// x = 1
-        for(unsigned int y = 0; y < terrain.Resolution-1; ++y)
-        {
-            int tempY = y + 1;
-            GLfloat yCoord_zero = 2 * (y/span) - 1;// y = 0
-            GLfloat yCoord_one = 2 * (tempY/span) - 1;// y = 1
-            // triangle 1 (0, 0, z)
-            terrainArrayMap.push_back(xCoord_zero);
-            terrainArrayMap.push_back(yCoord_zero);
-            terrainArrayMap.push_back((GLfloat)terrain.getHightMapValue(x, y)); // z value
-            // triangle 1 (0, 1, z)
-            terrainArrayMap.push_back(xCoord_zero);
-            terrainArrayMap.push_back(yCoord_one);
-            terrainArrayMap.push_back((GLfloat)terrain.getHightMapValue(x, tempY)); // z value
-            // triangle 1 (1,0, z)
-            terrainArrayMap.push_back(xCoord_one);
-            terrainArrayMap.push_back(yCoord_zero);
-            terrainArrayMap.push_back((GLfloat)terrain.getHightMapValue(tempX, y)); // z value
-            // triangle 2 (0, 1, z)
-            terrainArrayMap.push_back(xCoord_zero);
-            terrainArrayMap.push_back(yCoord_one);
-            terrainArrayMap.push_back((GLfloat)terrain.getHightMapValue(x, tempY)); // z value
-            // triangle 2 (1, 0, z)
-            terrainArrayMap.push_back(xCoord_one);
-            terrainArrayMap.push_back(yCoord_zero);
-            terrainArrayMap.push_back((GLfloat)terrain.getHightMapValue(tempX, y)); // z value
-            // triangle 2 (1, 1, z)
-            terrainArrayMap.push_back(xCoord_one);
-            terrainArrayMap.push_back(yCoord_one);
-            terrainArrayMap.push_back((GLfloat)terrain.getHightMapValue(tempX, tempY)); // z value
-
-        }
-    }
- GLfloat terrainArrayMapx[(terrain.Resolution-1) * (terrain.Resolution-1) * 18];
-     for (int i = 0; i < terrainArrayMap.size(); i++)
-    {
-        terrainArrayMapx[i] = terrainArrayMap[i];
-    }
-    //GLfloat * terrainArrayMapx = &terrainArrayMap[0];
-    // store vertices in a buffer to manage them on the graphics card
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    // 1. Bind vertex Array Object
-    glBindVertexArray(VAO);
-    // 2. copy our vertices array in a buffer for opengl to use
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(terrainArrayMapx), terrainArrayMapx, GL_DYNAMIC_DRAW);
-    // We then tell how opengl should interprit the vertex data
-    // (layout_Location, size of vertex attribute(vec3), dataType, GL_FALSE, length of stride, offset of where the position data begins in the buffer)
-    // 3. Then we set our vertex attributes pointers
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GL_FLOAT), (GLvoid*)0);
-    glEnableVertexAttribArray(0);
-    // 4. We unBind the vertex array object
-    glBindVertexArray(0);
-
-
+    terrain.InitTerrainMap();
 
     // Triangle positions
     glm::vec3 cubePositions[] = {
@@ -212,18 +150,12 @@ int main()
             cube.Draw();
         }
 //end
-        // Bind the array
-        glBindVertexArray(VAO);
-
+        terrain.Bind();
         glm::mat4 model;
         model = glm::translate(model, glm::vec3(0,0,0));
         model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::scale(model,  glm::vec3(15.0f));
-
-        terrain.TerrainShader.Use();
-        glm::mat4 trans = projection * game.camera.GetViewMatrix() * model;
-        terrain.TerrainShader.SetMatrix4("terrainTransform", trans);
-        glDrawArrays(GL_TRIANGLES, 0, terrainArrayMap.size() / 3);
+        terrain.Draw(projection, game.camera.GetViewMatrix(),model);
 
         glBindVertexArray(0); // unbind object so we dont misconfigure them elsewhere
 

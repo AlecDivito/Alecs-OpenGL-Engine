@@ -28,7 +28,6 @@ class MidPointTerrain
         void RandomNoise(); // create random noise inside the height map
         void MidPointDisplacement();
         void InitTerrainMap();
-        void ClearTerrain();
         void Bind();
         void Draw(glm::mat4 projection, glm::mat4 view, glm::mat4 model);
 
@@ -47,11 +46,11 @@ class MidPointTerrain
     private:
         // Members to help draw the terrain
         GLuint VBO, VAO;
-        std::vector<GLfloat> terrainArrayMap;
-        GLfloat * terrainArray;
+        GLfloat * terrainMap;
         // helper members
         int exponent; // self explaiontory
         int last;     // last elements index
+        int terrainVectorCount; // count the number of vertices to draw
         // helper functions to create the height map
         void mpdInitCorners();
         void mpdDisplace(int lx, int rx, int by, int ty, float spread);

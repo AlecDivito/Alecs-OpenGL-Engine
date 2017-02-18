@@ -1,17 +1,24 @@
 #include "MidPointTerrain.h"
 
 MidPointTerrain::MidPointTerrain(Shader shader, int exponent)
-    : TerrainShader(shader), exponent(exponent)
+    : TerrainShader(shader), exponent(exponent), terrainVectorCount(0)
 {
     srand(time(NULL));
     this->Resolution = pow(2, exponent) + 1;
     this->last = this->Resolution - 1;
+    // allocate memory for the turrain array
+    this->terrainMap = new GLfloat[this->last*this->last*18];
+    // store vertices in a buffer to manage them on the graphics card
+    glGenVertexArrays(1, &this->VAO);
+    glGenBuffers(1, &this->VBO);
+    // Initilize the height map
     ZeroHeightMap();
 }
 
 MidPointTerrain::~MidPointTerrain()
 {
     HeightMap.clear();
+    delete[] this->terrainMap;
 }
 
 // zero all elements inside the height map
@@ -75,56 +82,51 @@ void MidPointTerrain::MidPointDisplacement()
 // Init the height map to 3D and to be passed to openGL to be draw
 void MidPointTerrain::InitTerrainMap()
 {
-    this->ClearTerrain();
-    float span = this->Resolution;
-    for(unsigned int x = 0; x < this->Resolution-1; ++x)
+    // clear and load the 3D terrain Map
+    int counter = 0;
+    float span = (float)this->Resolution;
+    for(int x = 0; x < this->last; ++x)
     {
-        for(unsigned int y = 0; y < this->Resolution-1; ++y)
+        int tempX = x + 1; // normalize the coordinates
+        GLfloat xCoord_zero = 2 * ((float)x/span) - 1;// x = 0
+        GLfloat xCoord_one =  2 * ((float)tempX/span) - 1;// x = 1
+        for(int y = 0; y < this->last; ++y)
         {
-            int tempX = x + 1, tempY = y + 1;
-            GLfloat xCoord_zero = x / span, yCoord_zero = y / span;// x = 0, y = 0
-            GLfloat xCoord_one = tempX/span, yCoord_one = tempY/span;// x = 1, y = 1
+            int tempY = y + 1;
+            GLfloat yCoord_zero = 2 * ((float)y/span) - 1;// y = 0
+            GLfloat yCoord_one = 2 * ((float)tempY/span) - 1;// y = 1
             // triangle 1 (0, 0, z)
-            this->terrainArrayMap.push_back(xCoord_zero);
-            this->terrainArrayMap.push_back(yCoord_zero);
-            this->terrainArrayMap.push_back((GLfloat)this->getHightMapValue(x, y)); // z value
+            this->terrainMap[counter++] = (xCoord_zero);
+            this->terrainMap[counter++] = (yCoord_zero);
+            this->terrainMap[counter++] = ((GLfloat)this->getHightMapValue(x, y)); // z value
             // triangle 1 (0, 1, z)
-            this->terrainArrayMap.push_back(xCoord_zero);
-            this->terrainArrayMap.push_back(yCoord_one);
-            this->terrainArrayMap.push_back((GLfloat)this->getHightMapValue(x, tempY)); // z value
+            this->terrainMap[counter++] = (xCoord_zero);
+            this->terrainMap[counter++] = (yCoord_one);
+            this->terrainMap[counter++] = ((GLfloat)this->getHightMapValue(x, tempY)); // z value
             // triangle 1 (1,0, z)
-            this->terrainArrayMap.push_back(xCoord_one);
-            this->terrainArrayMap.push_back(yCoord_zero);
-            this->terrainArrayMap.push_back((GLfloat)this->getHightMapValue(tempX, y)); // z value
-break;
+            this->terrainMap[counter++] = (xCoord_one);
+            this->terrainMap[counter++] = (yCoord_zero);
+            this->terrainMap[counter++] = ((GLfloat)this->getHightMapValue(tempX, y)); // z value
             // triangle 2 (0, 1, z)
-            this->terrainArrayMap.push_back(xCoord_zero);
-            this->terrainArrayMap.push_back(yCoord_one);
-            this->terrainArrayMap.push_back((GLfloat)this->getHightMapValue(x, tempY)); // z value
+            this->terrainMap[counter++] = (xCoord_zero);
+            this->terrainMap[counter++] = (yCoord_one);
+            this->terrainMap[counter++] = ((GLfloat)this->getHightMapValue(x, tempY)); // z value
             // triangle 2 (1, 0, z)
-            this->terrainArrayMap.push_back(xCoord_one);
-            this->terrainArrayMap.push_back(yCoord_zero);
-            this->terrainArrayMap.push_back((GLfloat)this->getHightMapValue(tempX, y)); // z value
+            this->terrainMap[counter++] = (xCoord_one);
+            this->terrainMap[counter++] = (yCoord_zero);
+            this->terrainMap[counter++] = ((GLfloat)this->getHightMapValue(tempX, y)); // z value
             // triangle 2 (1, 1, z)
-            this->terrainArrayMap.push_back(xCoord_one);
-            this->terrainArrayMap.push_back(yCoord_one);
-            this->terrainArrayMap.push_back((GLfloat)this->getHightMapValue(tempX, tempY)); // z value
+            this->terrainMap[counter++] = (xCoord_one);
+            this->terrainMap[counter++] = (yCoord_one);
+            this->terrainMap[counter++] = ((GLfloat)this->getHightMapValue(tempX, tempY)); // z value
+            this->terrainVectorCount+=6;
         }
-        break;
     }
-
-    for (auto i : this->terrainArrayMap)
-    {
-        printf("%f\n", i);
-    }
-    // store vertices in a buffer to manage them on the graphics card
-    glGenVertexArrays(1, &this->VAO);
-    glGenBuffers(1, &this->VBO);
     // 1. Bind vertex Array Object
     glBindVertexArray(this->VAO);
     // 2. copy our vertices array in a buffer for opengl to use
     glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(&this->terrainArrayMap[0]), &this->terrainArrayMap[0], GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * this->last*this->last*18, this->terrainMap, GL_DYNAMIC_DRAW);
     // We then tell how opengl should interprit the vertex data
     // (layout_Location, size of vertex attribute(vec3), dataType, GL_FALSE, length of stride, offset of where the position data begins in the buffer)
     // 3. Then we set our vertex attributes pointers
@@ -132,11 +134,6 @@ break;
     glEnableVertexAttribArray(0);
     // 4. We unBind the vertex array object
     glBindVertexArray(0);
-}
-
-void MidPointTerrain::ClearTerrain()
-{
-    this->terrainArrayMap.clear();
 }
 
 void MidPointTerrain::Bind()
@@ -147,9 +144,9 @@ void MidPointTerrain::Bind()
 void MidPointTerrain::Draw(glm::mat4 projection, glm::mat4 view, glm::mat4 model)
 {
     this->TerrainShader.Use();
-    glm::mat4 trans;// = projection * view * model;
+    glm::mat4 trans = projection * view * model;
     this->TerrainShader.SetMatrix4("terrainTransform", trans);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawArrays(GL_TRIANGLES, 0, this->terrainVectorCount);
 }
 
 // get the size of the height map
@@ -164,10 +161,16 @@ int MidPointTerrain::getSize()
 void MidPointTerrain::mpdInitCorners()
 {
     // Set the 4 corners of the map to random values between 0 and 1
-    setHeightMapValue(0, 0, getRandom());
-    setHeightMapValue(this->last, 0, getRandom());
-    setHeightMapValue(this->last, this->last, getRandom());
-    setHeightMapValue(0, this->last, getRandom());
+    /*setHeightMapValue(0, 0, getRandom());
+ */   /*setHeightMapValue(this->last, 0, getRandom());
+*/    /*setHeightMapValue(this->last, this->last, getRandom());*/
+    /*setHeightMapValue(0, this->last, getRandom());
+*/
+setHeightMapValue(0, 0, 0);
+setHeightMapValue(this->last, 0, 0);
+setHeightMapValue(this->last, this->last, 0);
+setHeightMapValue(0, this->last, 0);
+
 }
 
 // Set the center and the middle of rows and cols
@@ -194,7 +197,7 @@ void MidPointTerrain::mpdDisplace(int lx, int rx, int by, int ty, float spread)
     setHeightMapValue(cx, cy, jitter(center, spread));
 }
 
-// Compress the height map to make all values between 1.0 and 0.0
+// Compress the height map to make all values between 1.0 and -1.0
 void MidPointTerrain::normalize()
 {
     float max = 1.0f,min = 0.0f;
@@ -208,7 +211,7 @@ void MidPointTerrain::normalize()
     for (int i = 0; i < getSize(); ++i)
     {
         float temp = this->HeightMap[i];
-        this->HeightMap[i] = (temp - min) / span;
+        this->HeightMap[i] = 2 * ((temp - min) / span) - 1;
     }
 }
 
