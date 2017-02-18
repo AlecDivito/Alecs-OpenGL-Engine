@@ -20,6 +20,8 @@ void Game::Init()
 
     // Load textures
     ResourceManager::LoadTexture("textures/container.jpg", GL_TRUE, "wall");
+
+
 }
 
 void Game::Update(GLfloat dt)
