@@ -88,7 +88,6 @@ int main()
     game.Init();
 
     // How to draw the triangles
-//    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     while(!glfwWindowShouldClose(window)) // checks if window was instructed to close

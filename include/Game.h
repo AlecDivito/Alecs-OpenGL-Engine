@@ -12,6 +12,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Cube.h"
+#include "Light.h"
 #include "ResourceManager.h"
 #include "MidPointTerrain.h"
 
@@ -40,6 +41,7 @@ class Game
         Camera camera;
         // Game objects
         Cube * cube;
+        Light * light;
         MidPointTerrain * terrain;
         // Constructor / Destructor
         Game(GLuint width, GLuint height);
