@@ -161,15 +161,10 @@ int MidPointTerrain::getSize()
 void MidPointTerrain::mpdInitCorners()
 {
     // Set the 4 corners of the map to random values between 0 and 1
-    /*setHeightMapValue(0, 0, getRandom());
- */   /*setHeightMapValue(this->last, 0, getRandom());
-*/    /*setHeightMapValue(this->last, this->last, getRandom());*/
-    /*setHeightMapValue(0, this->last, getRandom());
-*/
-setHeightMapValue(0, 0, 0);
-setHeightMapValue(this->last, 0, 0);
-setHeightMapValue(this->last, this->last, 0);
-setHeightMapValue(0, this->last, 0);
+    setHeightMapValue(0, 0, getRandom());
+    setHeightMapValue(this->last, 0, getRandom());
+    setHeightMapValue(this->last, this->last, getRandom());
+    setHeightMapValue(0, this->last, getRandom());
 
 }
 

@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1487458796 source:/home/divitoa/Program/c++/MineCraftSandbox/main.cpp
+1487470631 source:/home/divitoa/Program/c++/MineCraftSandbox/main.cpp
 	<cstdio>
 	<cmath>
 	<iostream>
@@ -10,10 +10,8 @@
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
 	<glm/gtc/type_ptr.hpp>
-	<SOIL.h>
 	"ResourceManager.h"
 	"Game.h"
-	"MidPointTerrain.h"
 
 1469335416 /home/divitoa/Program/c++/libs/glew-2.0.0/include/GL/glew.h
 	<stddef.h>
@@ -112,25 +110,25 @@
 	"Texture2D.h"
 	"Shader.h"
 
-1487434675 /home/divitoa/Program/c++/MineCraftSandbox/include/Cube.h
+1487470698 /home/divitoa/Program/c++/MineCraftSandbox/include/Cube.h
 	<GL/glew.h>
 	"GameObject.h"
 
-1487115898 /home/divitoa/Program/c++/MineCraftSandbox/include/GameObject.h
+1487470688 /home/divitoa/Program/c++/MineCraftSandbox/include/GameObject.h
 	<GL/glew.h>
 	<glm/glm.hpp>
 	"Texture2D.h"
 
-1487434679 source:/home/divitoa/Program/c++/MineCraftSandbox/src/Cube.cpp
+1487470671 source:/home/divitoa/Program/c++/MineCraftSandbox/src/Cube.cpp
 	"Cube.h"
 
 1487115898 source:/home/divitoa/Program/c++/MineCraftSandbox/src/GameObject.cpp
 	"GameObject.h"
 
-1487434693 source:/home/divitoa/Program/c++/MineCraftSandbox/src/Game.cpp
+1487459681 source:/home/divitoa/Program/c++/MineCraftSandbox/src/Game.cpp
 	"Game.h"
 
-1487434590 /home/divitoa/Program/c++/MineCraftSandbox/include/Game.h
+1487462860 /home/divitoa/Program/c++/MineCraftSandbox/include/Game.h
 	<GL/glew.h>
 	<GLFW/glfw3.h>
 	<glm/glm.hpp>
@@ -140,6 +138,7 @@
 	"Camera.h"
 	"Cube.h"
 	"ResourceManager.h"
+	"MidPointTerrain.h"
 
 1487115898 source:/home/divitoa/Program/c++/MineCraftSandbox/src/Player.cpp
 	"Player.h"
@@ -155,6 +154,6 @@
 	<GL/glew.h>
 	"Shader.h"
 
-1487458730 source:/home/divitoa/Program/c++/MineCraftSandbox/src/MidPointTerrain.cpp
+1487459754 source:/home/divitoa/Program/c++/MineCraftSandbox/src/MidPointTerrain.cpp
 	"MidPointTerrain.h"
 

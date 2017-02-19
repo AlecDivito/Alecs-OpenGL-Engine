@@ -2,59 +2,34 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src/Game.cpp" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="3063" topLine="66" />
+			<Cursor1 position="345" topLine="13" />
 		</Cursor>
 	</File>
-	<File name="shaders/terrain.vs" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="shaders/terrain.vs" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="327" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src/Camera.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="include/GameObject.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1074" topLine="0" />
+			<Cursor1 position="530" topLine="11" />
 		</Cursor>
 	</File>
-	<File name="include/Texture2D.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src/Cube.cpp" open="1" top="1" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="958" topLine="0" />
+			<Cursor1 position="4033" topLine="44" />
 		</Cursor>
 	</File>
-	<File name="include/Player.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="include/ResourceManager.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="54" topLine="0" />
+			<Cursor1 position="1084" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="include/Cube.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="include/Game.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="217" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src/MidPointTerrain.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3998" topLine="110" />
-		</Cursor>
-	</File>
-	<File name="include/Camera.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="359" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="include/Shader.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="915" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src/Game.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="359" topLine="6" />
-		</Cursor>
-	</File>
-	<File name="shaders/shader.frag" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="79" topLine="0" />
+			<Cursor1 position="787" topLine="30" />
 		</Cursor>
 	</File>
 	<File name="src/ResourceManager.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -62,39 +37,24 @@
 			<Cursor1 position="608" topLine="0" />
 		</Cursor>
 	</File>
+	<File name="include/Shader.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="915" topLine="0" />
+		</Cursor>
+	</File>
 	<File name="shaders/shader.vs" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="117" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="include/MidPointTerrain.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="include/Cube.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="627" topLine="0" />
+			<Cursor1 position="14" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src/Texture2D.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="816" zoom_1="0" zoom_2="0">
+	<File name="shaders/shader.frag" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1005" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="include/GameObject.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="546" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="include/Game.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="738" topLine="5" />
-		</Cursor>
-	</File>
-	<File name="src/GameObject.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="568" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src/Cube.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2816" topLine="31" />
+			<Cursor1 position="79" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="src/Shader.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -102,9 +62,49 @@
 			<Cursor1 position="4373" topLine="99" />
 		</Cursor>
 	</File>
-	<File name="include/ResourceManager.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="include/MidPointTerrain.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1084" topLine="0" />
+			<Cursor1 position="923" topLine="17" />
+		</Cursor>
+	</File>
+	<File name="src/GameObject.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="568" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="include/Player.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="54" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="main.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4432" topLine="103" />
+		</Cursor>
+	</File>
+	<File name="include/Texture2D.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="958" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src/Camera.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1074" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="include/Camera.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="358" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src/Texture2D.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="816" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1005" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src/MidPointTerrain.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="5554" topLine="141" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>
