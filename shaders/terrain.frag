@@ -3,9 +3,9 @@
 // fragment shader requires one vec4 output
 out vec4 color;
 
-in vec3 ourColors;
+in vec4 ourColors;
 
 void main()
 {
-    color = vec4(ourColors, 1.0);
+    color = ourColors;
 }

@@ -62,12 +62,18 @@
 		<Unit filename="include/Cube.h" />
 		<Unit filename="include/Game.h" />
 		<Unit filename="include/GameObject.h" />
+		<Unit filename="include/Light.h" />
+		<Unit filename="include/Mesh.h" />
 		<Unit filename="include/MidPointTerrain.h" />
 		<Unit filename="include/Player.h" />
 		<Unit filename="include/ResourceManager.h" />
 		<Unit filename="include/Shader.h" />
 		<Unit filename="include/Texture2D.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="shaders/lamp.frag" />
+		<Unit filename="shaders/lamp.vs" />
+		<Unit filename="shaders/lighting.frag" />
+		<Unit filename="shaders/lighting.vs" />
 		<Unit filename="shaders/shader.frag" />
 		<Unit filename="shaders/shader.vs" />
 		<Unit filename="shaders/terrain.frag" />
@@ -76,6 +82,8 @@
 		<Unit filename="src/Cube.cpp" />
 		<Unit filename="src/Game.cpp" />
 		<Unit filename="src/GameObject.cpp" />
+		<Unit filename="src/Light.cpp" />
+		<Unit filename="src/Mesh.cpp" />
 		<Unit filename="src/MidPointTerrain.cpp">
 			<Option virtualFolder="include/" />
 		</Unit>

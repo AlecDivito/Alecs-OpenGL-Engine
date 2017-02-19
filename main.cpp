@@ -13,12 +13,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-// SOIL
-#include <SOIL.h>
 // Personal
 #include "ResourceManager.h"
 #include "Game.h"
-#include "MidPointTerrain.h"
 
 // Window dimensions
 const GLuint WIDTH = 1600, HEIGHT = 900;
@@ -89,25 +86,9 @@ int main()
     glfwSetCursorPosCallback(window, mouse_callback);
 
     game.Init();
-    MidPointTerrain terrain(ResourceManager::GetShader("terrain"), 2);
-    terrain.MidPointDisplacement();
-    terrain.InitTerrainMap();
-
-    // Triangle positions
-    glm::vec3 cubePositions[] = {
-      glm::vec3( 10.0f,  0.0f,  0.0f),
-      glm::vec3( 10.0f, 10.0f, -10.0f),
-      glm::vec3(-10.5f, -10.2f, -10.5f),
-      glm::vec3(-10.8f, 10.0f, 10.3f),
-    };
-
-    // We create a cube
-    Cube cube(ResourceManager::GetTexture("wall"));
-
 
     // How to draw the triangles
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-//    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     while(!glfwWindowShouldClose(window)) // checks if window was instructed to close
     {
@@ -116,46 +97,17 @@ int main()
         GLfloat deltaTime = time - lastFrame;
         lastFrame = time;
         glfwPollEvents(); // checks if any events are triggered (like keyboard input or mouse movement events) and calls the corresponding functions
-// draw cube
+
         // Process keyboard inputs
         game.ProcessInput(deltaTime);
 
         // Update objects
         game.Update(deltaTime);
 
-        cube.Bind(); // we bind the cube to the current context
-
         // Render shit
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // Sets the background color
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         game.Render();
-        ResourceManager::GetShader("shader").Use();
-
-        // VIEW: reposition the camera
-        // PROJECTION: set up a perspective
-        glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1.0f * WIDTH/HEIGHT, 0.1f, 500.0f);
-        for(unsigned int i = 0; i < (sizeof(cubePositions)/sizeof(*cubePositions)); i++)
-        {
-            // Identity matrix
-            glm::mat4 trans;
-            glm::mat4 anim = glm::rotate(trans,(GLfloat)(time / 1000.0 * 1000), glm::vec3(0.0f, 1.0f, 0.0f));
-            // MODEL: push cude back a bit to not touch the camera
-            glm::mat4 model = glm::translate(glm::mat4(1.0f), cubePositions[i]);
-            // Result
-            trans = projection * game.camera.GetViewMatrix() * model * anim;
-
-            ResourceManager::GetShader("shader").SetVector4f("ourColor", 0.0f,(GLfloat)cos(time), (GLfloat)sin(time),1.0f);
-            ResourceManager::GetShader("shader").SetMatrix4("transform", trans);
-
-            cube.Draw();
-        }
-//end
-        terrain.Bind();
-        glm::mat4 model;
-        model = glm::translate(model, glm::vec3(0,0,0));
-        model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::scale(model,  glm::vec3(15.0f));
-        terrain.Draw(projection, game.camera.GetViewMatrix(),model);
 
         glBindVertexArray(0); // unbind object so we dont misconfigure them elsewhere
 

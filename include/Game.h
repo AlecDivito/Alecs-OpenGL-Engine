@@ -12,7 +12,10 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Cube.h"
+#include "Light.h"
 #include "ResourceManager.h"
+#include "MidPointTerrain.h"
+
 
 enum GameState
 {
@@ -32,8 +35,14 @@ class Game
         GameState State;
         GLboolean Keys[1024];
         GLuint Width, Height;
+        // view related
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1.0f * Width/Height, 0.1f, 500.0f);
         // Player Object (which is a camera for right now)
         Camera camera;
+        // Game objects
+        Cube * cube;
+        Light * light;
+        MidPointTerrain * terrain;
         // Constructor / Destructor
         Game(GLuint width, GLuint height);
         virtual ~Game();

@@ -11,6 +11,7 @@ class Cube : public GameObject
         // Cubes opengl IDs
         GLuint VBO, VAO;
         // Constructor and deconstructor
+        Cube();
         Cube(Texture2D texture);
         virtual ~Cube();
         // Bind Objects
@@ -19,11 +20,10 @@ class Cube : public GameObject
         void Draw();
         // collision
         GLboolean CheckCollision(GameObject &obj);
-
+        // Set up our vertex data (and buffer(s)) and attribute pointers
+        const static GLfloat Vertices[];
     protected:
     private:
-    // Set up our vertex data (and buffer(s)) and attribute pointers
-    const static GLfloat vertices[];
 };
 
 #endif // CUBE_H

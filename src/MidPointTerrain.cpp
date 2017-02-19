@@ -141,11 +141,8 @@ void MidPointTerrain::Bind()
     glBindVertexArray(this->VAO);
 }
 
-void MidPointTerrain::Draw(glm::mat4 projection, glm::mat4 view, glm::mat4 model)
+void MidPointTerrain::Draw()
 {
-    this->TerrainShader.Use();
-    glm::mat4 trans = projection * view * model;
-    this->TerrainShader.SetMatrix4("terrainTransform", trans);
     glDrawArrays(GL_TRIANGLES, 0, this->terrainVectorCount);
 }
 
@@ -161,16 +158,14 @@ int MidPointTerrain::getSize()
 void MidPointTerrain::mpdInitCorners()
 {
     // Set the 4 corners of the map to random values between 0 and 1
-    /*setHeightMapValue(0, 0, getRandom());
- */   /*setHeightMapValue(this->last, 0, getRandom());
-*/    /*setHeightMapValue(this->last, this->last, getRandom());*/
-    /*setHeightMapValue(0, this->last, getRandom());
-*/
-setHeightMapValue(0, 0, 0);
-setHeightMapValue(this->last, 0, 0);
-setHeightMapValue(this->last, this->last, 0);
-setHeightMapValue(0, this->last, 0);
-
+/*    setHeightMapValue(0, 0, getRandom());
+    setHeightMapValue(this->last, 0, getRandom());
+    setHeightMapValue(this->last, this->last, getRandom());
+    setHeightMapValue(0, this->last, getRandom());*/
+    setHeightMapValue(0, 0, -1);
+    setHeightMapValue(this->last, 0, -1);
+    setHeightMapValue(this->last, this->last, -1);
+    setHeightMapValue(0, this->last, -1);
 }
 
 // Set the center and the middle of rows and cols
