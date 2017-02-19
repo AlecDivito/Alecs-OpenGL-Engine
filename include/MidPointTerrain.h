@@ -29,7 +29,7 @@ class MidPointTerrain
         void MidPointDisplacement();
         void InitTerrainMap();
         void Bind();
-        void Draw(glm::mat4 projection, glm::mat4 view, glm::mat4 model);
+        void Draw();
 
         int getSize(); // get the size of the height map
         void toString() // keeping toString for debuging

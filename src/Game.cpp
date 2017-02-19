@@ -67,6 +67,10 @@ void Game::ProcessInput(GLfloat dt)
             this->camera.ProcessKeyboard(LEFT, dt);
         if(this->Keys[GLFW_KEY_D])
             this->camera.ProcessKeyboard(RIGHT, dt);
+        if(this->Keys[GLFW_KEY_F5]) {
+            this->terrain->MidPointDisplacement();
+            this->terrain->InitTerrainMap();
+        }
     }
 }
 
@@ -90,11 +94,14 @@ void Game::Render()
             this->cube->Draw();
         }
         // draw terrain
+        ResourceManager::GetShader("terrain").Use();
         this->terrain->Bind();
         glm::mat4 terrainModel;
         terrainModel = glm::translate(terrainModel, glm::vec3(0,0,0));
-        terrainModel = glm::rotate(terrainModel, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        terrainModel = glm::scale(terrainModel,  glm::vec3(15.0f,15.0f,10.0f));
-        terrain->Draw(this->projection, camera.GetViewMatrix(),terrainModel);
+        terrainModel = glm::rotate(terrainModel, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        terrainModel = glm::scale(terrainModel,  glm::vec3(3.0f,3.0f,3.5));
+        glm::mat4 terrainTrans = projection * camera.GetViewMatrix() * terrainModel;
+        ResourceManager::GetShader("terrain").SetMatrix4("terrainTransform", terrainTrans);
+        terrain->Draw();
     }
 }
