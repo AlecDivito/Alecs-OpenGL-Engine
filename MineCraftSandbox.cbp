@@ -63,6 +63,7 @@
 		<Unit filename="include/Game.h" />
 		<Unit filename="include/GameObject.h" />
 		<Unit filename="include/Light.h" />
+		<Unit filename="include/Mesh.h" />
 		<Unit filename="include/MidPointTerrain.h" />
 		<Unit filename="include/Player.h" />
 		<Unit filename="include/ResourceManager.h" />
@@ -82,6 +83,7 @@
 		<Unit filename="src/Game.cpp" />
 		<Unit filename="src/GameObject.cpp" />
 		<Unit filename="src/Light.cpp" />
+		<Unit filename="src/Mesh.cpp" />
 		<Unit filename="src/MidPointTerrain.cpp">
 			<Option virtualFolder="include/" />
 		</Unit>
