@@ -1,13 +1,15 @@
 #include "Game.h"
 #include "Light.h"
+#include <vector>
 
     // Triangle positions
-glm::vec3 cubePositions[] = {
-    glm::vec3( 10.0f,  0.0f,  0.0f),
-    glm::vec3( 10.0f, 10.0f, -10.0f),
-    glm::vec3(-10.5f, -10.2f, -10.5f),
-    glm::vec3(-10.8f, 10.0f, 10.3f),
-};
+//glm::vec3 cubePositions[] = {
+//    glm::vec3( 10.0f,  0.0f,  0.0f),
+//    glm::vec3( 10.0f, 10.0f, -10.0f),
+//    glm::vec3(-10.5f, -10.2f, -10.5f),
+//    glm::vec3(-10.8f, 10.0f, 10.3f),
+//};
+std::vector<glm::vec3> cubePositions;
 
 glm::vec3 pointLightPositions[] = {
     glm::vec3( 0.7f,  0.2f,  2.0f),
@@ -45,6 +47,12 @@ void Game::Init()
     this->terrain = &tempTerrain;
     static Light light;
     this->light = &light;
+
+    // create random positions for 50 boxes
+    for(int i = 0; i < 50; i++)
+    {
+        cubePositions.push_back(glm::vec3((rand() % 20) - 10,(rand() % 20) - 10, (rand() % 20) - 10 ));
+    }
 }
 
 void Game::Update(GLfloat dt)
@@ -98,33 +106,11 @@ void Game::Render()
     {
         // Draw cubes
         ResourceManager::GetShader("light").Use();
-        // viewPos
+        ResourceManager::GetShader("light").SetVector3f("objectColor", 1.0f, 0.5f, 0.31f);
+        ResourceManager::GetShader("light").SetVector3f("lightColor", glm::vec3(1.0f));
+        ResourceManager::GetShader("light").SetVector3f("lightPos", pointLightPositions[0]);
         ResourceManager::GetShader("light").SetVector3f("viewPos", camera.Position);
-        // Directional light
-        ResourceManager::GetShader("light").SetVector3f("dirLight.direction", -0.2f, -1.0f, -0.3f);
-        ResourceManager::GetShader("light").SetVector3f("dirLight.ambient", 0.05f, 0.05f, 0.05f);
-        ResourceManager::GetShader("light").SetVector3f("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
-        ResourceManager::GetShader("light").SetVector3f("dirLight.specular", 0.5f, 0.5f, 0.5f);
-            // Point light 1
-        ResourceManager::GetShader("light").SetVector3f("pointLights[0].position", pointLightPositions[0]);
-        ResourceManager::GetShader("light").SetVector3f("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
-        ResourceManager::GetShader("light").SetVector3f("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
-        ResourceManager::GetShader("light").SetVector3f("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
-        ResourceManager::GetShader("light").SetFloat("pointLights[0].constant", 1.0f);
-        ResourceManager::GetShader("light").SetFloat("pointLights[0].linear", 0.09);
-        ResourceManager::GetShader("light").SetFloat("pointLights[0].quadratic", 0.032);
-            // Spot light
-        ResourceManager::GetShader("light").SetVector3f("spotLight.position", camera.Position);
-        ResourceManager::GetShader("light").SetVector3f("spotLight.direction", camera.Front);
-        ResourceManager::GetShader("light").SetVector3f("spotLight.ambient", 0.0f, 0.0f, 0.0f);
-        ResourceManager::GetShader("light").SetVector3f("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
-        ResourceManager::GetShader("light").SetVector3f("spotLight.specular", 1.0f, 1.0f, 1.0f);
-        ResourceManager::GetShader("light").SetFloat("spotLight.constant", 1.0f);
-        ResourceManager::GetShader("light").SetFloat("spotLight.linear", 0.09);
-        ResourceManager::GetShader("light").SetFloat("spotLight.quadratic", 0.032);
-        ResourceManager::GetShader("light").SetFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
-        ResourceManager::GetShader("light").SetFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
-        for(unsigned int i = 0; i < (sizeof(cubePositions)/sizeof(*cubePositions)); i++)
+        for(unsigned int i = 0; i < cubePositions.size(); i++)
         {
             // render cubes
             this->cube->Bind();
